@@ -15,8 +15,13 @@
             android:layout_height="80dp">
 
         <ImageView
-
                 android:id="@+id/iv_left"
+                android:background="@mipmap/ic_folder_bg"
+                android:paddingBottom="17dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="9dp"
+                android:scaleType="fitXY"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
@@ -59,7 +64,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:src="@mipmap/ic_folder_uncheck"/>
+            android:src="@mipmap/ic_folder_checked"/>
 
     <View
             android:layout_width="match_parent"

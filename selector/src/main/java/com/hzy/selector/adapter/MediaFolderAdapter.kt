@@ -34,7 +34,7 @@ class MediaFolderAdapter(private val context: Context, private val mediaFolderDa
             mediaFolderData[position].fileData.size.toString()
         )
         holder.mTvTitle.text = mediaFolderData[position].folderName
-        holder.mIvCheck.setImageResource(if (mediaFolderData[position].isCheck) R.mipmap.ic_folder_check else R.mipmap.ic_folder_uncheck)
+        holder.mIvCheck.visibility = if(mediaFolderData[position].isCheck) View.VISIBLE else View.GONE
         holder.mIvVideoStype.visibility = if (mediaFolderData[position].isAllVideo) View.VISIBLE else View.GONE
 
         holder.itemView.setOnClickListener { v ->
