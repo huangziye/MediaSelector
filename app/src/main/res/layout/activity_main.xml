@@ -7,7 +7,11 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-    <Button android:layout_width="match_parent" android:layout_height="wrap_content" android:text="open camera"
+    <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="open camera"
             android:id="@+id/btn_open"/>
+
+    <ImageView android:layout_width="300dp" android:layout_height="300dp" android:id="@+id/iv"/>
 
 </LinearLayout>

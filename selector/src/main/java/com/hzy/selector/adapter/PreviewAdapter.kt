@@ -58,7 +58,7 @@ class PreviewAdapter(private val mediaFileData: MutableList<MediaSelectorFile>) 
             layoutParams.width = ScreenUtil.screenWidth(container.context)
             layoutParams.height = ScreenUtil.screenHeight(container.context)
             photoView.layoutParams = layoutParams
-            GlideUtil.loadImage(container.context, mediaFileData[position].filePath, photoView, false)
+            GlideUtil.loadImage(container.context, mediaFileData[position].filePath!!, photoView, false)
             mCbPlay.setOnCheckedChangeListener { buttonView, isChecked ->
                 if (isChecked && mOnPreviewVideoClickListener != null) {
                     mOnPreviewVideoClickListener!!.onVideoClick(mCbPlay, position)
@@ -73,7 +73,7 @@ class PreviewAdapter(private val mediaFileData: MutableList<MediaSelectorFile>) 
             layoutParams.width = ScreenUtil.screenWidth(container.context)
             layoutParams.height = ScreenUtil.screenHeight(container.context)
             photoView.layoutParams = layoutParams
-            GlideUtil.loadImage(container.context, mediaFileData[position].filePath, photoView, false)
+            GlideUtil.loadImage(container.context, mediaFileData[position].filePath!!, photoView, false)
             clickPhotoView(photoView)
             return photoView
         }

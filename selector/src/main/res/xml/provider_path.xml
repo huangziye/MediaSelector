@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--path即为代表目录下的子目录,例如：external-path，代表目录即为Environment.getExternalStorageDirectory()/，当这么声明以后，代码可以使用你所声明的当前文件夹以及其子文件夹-->
+    <!--代表设备的根目录new File("/")-->
+    <root-path name="root_path" path="."/>
+    <!--代表context.getFilesDir()-->
+    <files-path name="files_path" path="."/>
+    <!--代表context.getCacheDir()-->
+    <cache-path name="cache_path" path="."/>
+    <!--代表Environment.getExternalStorageDirectory()-->
+    <external-path
+            name="external_files"
+            path="."/>
+    <!--代表context.getExternalFilesDirs()-->
+    <external-files-path name="external_files_path" path="."/>
+    <!--代表getExternalCacheDirs()-->
+    <external-cache-path name="external_cache_path" path="."/>
+</resources>

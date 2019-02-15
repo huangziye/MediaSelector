@@ -107,7 +107,10 @@ class MediaSelector {
 
         fun with(fragment: Fragment): MediaSelector = MediaSelector(fragment)
 
-        fun resultMediaFile(data: Intent?): List<MediaSelectorFile>? =
+        /**
+         * 获取选择的文件
+         */
+        fun obtainMediaFile(data: Intent?): List<MediaSelectorFile>? =
             data?.getParcelableArrayListExtra(Const.KEY_REQUEST_MEDIA_DATA)
 
         val defaultOptions: MediaOptions

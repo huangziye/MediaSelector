@@ -157,9 +157,16 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
         })
         mPreviewAdapter.setOnPreviewVideoClickListener(object : PreviewAdapter.OnPreviewVideoClickListener {
             override fun onVideoClick(view: View, position: Int) {
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.setDataAndType(Uri.parse(mMediaFileData!![position].filePath), "video/*")
-                startActivityForResult(intent, Const.CODE_REQUEST_PRIVIEW_VIDEO)
+                try {
+                    val intent = Intent()
+                    intent.setDataAndType(Uri.parse(mMediaFileData!![position].filePath), "video/*")
+                    startActivityForResult(intent, Const.CODE_REQUEST_PRIVIEW_VIDEO)
+                } catch (e: Exception) {
+                    Toast.makeText(this@PreviewActivity, "没有默认播放器", Toast.LENGTH_SHORT).show()
+                    mPreviewAdapter.mCbPlay.isChecked = false
+                    mPreviewAdapter.notifyDataSetChanged()
+                    e.printStackTrace()
+                }
             }
         })
         mCheckAdapter.setOnRecyclerItemClickListener(object : OnRecyclerItemClickListener {
@@ -235,7 +242,7 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (resultCode) {
-            Activity.RESULT_CANCELED -> {
+            0 -> {
                 if (requestCode == Const.CODE_REQUEST_PRIVIEW_VIDEO) {
                     mPreviewAdapter.mCbPlay.isChecked = false
                     mPreviewAdapter.notifyDataSetChanged()
@@ -251,7 +258,7 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
                         mCheckMediaData!!.clear()
                         val file = File(resultUri.path!!)
                         if (FileUtil.existsFile(file.absolutePath)) {
-                            mCheckMediaData!!.add(MediaSelectorFile.checkFileToThis(file))
+                            mCheckMediaData!!.add(MediaSelectorFile.selectThisFile(file))
                             EventBus.getDefault()
                                 .post(MessageEvent(MessageEvent.HANDING_DATA_IN_PREVIEW_PAGE, mCheckMediaData))
                             finish()
@@ -352,7 +359,7 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
                 override fun resultFilesSucceed(list: List<File>) {
                     mCheckMediaData!!.clear()
                     for (i in list.indices) {
-                        mCheckMediaData!!.add(MediaSelectorFile.checkFileToThis(list[i]))
+                        mCheckMediaData!!.add(MediaSelectorFile.selectThisFile(list[i]))
                     }
                     EventBus.getDefault().post(MessageEvent(MessageEvent.HANDING_DATA_IN_PREVIEW_PAGE, mCheckMediaData))
                     finish()

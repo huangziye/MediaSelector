@@ -10,8 +10,8 @@ import android.os.Parcel
  * @date: 2019/2/12
  */
 class MediaSelectorFolder() : Parcelable {
-    lateinit var folderName: String
-    lateinit var folderPath: String
+    var folderName: String? = null
+    var folderPath: String? = null
     var fileData: MutableList<MediaSelectorFile> = mutableListOf()
     var isCheck: Boolean = false
     lateinit var firstFilePath: String
@@ -22,7 +22,7 @@ class MediaSelectorFolder() : Parcelable {
         folderPath = parcel.readString()
         fileData = parcel.createTypedArrayList(MediaSelectorFile)
         isCheck = parcel.readByte().toInt() != 0
-        firstFilePath = parcel.readString()
+        firstFilePath = parcel.readString()!!
         isAllVideo = parcel.readByte().toInt() != 0
     }
 

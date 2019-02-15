@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import androidx.core.content.FileProvider
 import com.hzy.selector.resolver.MediaScanner
 import java.io.File
@@ -17,7 +18,7 @@ import java.io.File
  * @date: 2019/2/11
  */
 object FileUtil {
-
+    val FILE_DIRECTOR_NAME = "MediaSelector"
     /**
      * 获取父文件夹名字
      */
@@ -45,8 +46,10 @@ object FileUtil {
     }
 
     fun createCameraFileDirectory(context: Context): File {
-        var rootFile = context.filesDir
-        rootFile = File("${rootFile.absolutePath}/images")
+        val storageState = Environment.getExternalStorageState()
+        var rootFile =
+            if (storageState == Environment.MEDIA_MOUNTED) Environment.getExternalStorageDirectory() else context.cacheDir
+        rootFile = File(rootFile.absolutePath, "$FILE_DIRECTOR_NAME/images")
         if (!rootFile.exists() || !rootFile.isDirectory) {
             rootFile.mkdirs()
         }
@@ -55,8 +58,10 @@ object FileUtil {
 
 
     fun createFileDirectory(context: Context, folderName: String): File {
-        var rootFile = context.filesDir
-        rootFile = File(rootFile.absolutePath + "/" + folderName)
+        val storageState = Environment.getExternalStorageState()
+        var rootFile =
+            if (storageState == Environment.MEDIA_MOUNTED) Environment.getExternalStorageDirectory() else context.cacheDir
+        rootFile = File(rootFile.absolutePath, "$FILE_DIRECTOR_NAME/$folderName")
         if (!rootFile.exists() || !rootFile.isDirectory) {
             rootFile.mkdirs()
         }

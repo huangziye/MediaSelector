@@ -80,7 +80,7 @@ class MediaHelper(private val activity: Activity) {
 
                 mediaFile.filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA))
                 if (TextUtils.isEmpty(mediaFile.fileName) || TextUtils.isEmpty(mediaFile.filePath)
-                    || TextUtils.getTrimmedLength(mediaFile.fileName) == 0 || TextUtils.getTrimmedLength(mediaFile.filePath) == 0 || mediaFile.fileName.endsWith(
+                    || TextUtils.getTrimmedLength(mediaFile.fileName) == 0 || TextUtils.getTrimmedLength(mediaFile.filePath) == 0 || mediaFile.fileName!!.endsWith(
                         ".gif"
                     )
                 ) {
@@ -91,9 +91,9 @@ class MediaHelper(private val activity: Activity) {
                     mediaFile.width = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.WIDTH))
                     mediaFile.height = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.HEIGHT))
                 }
-                if (FileUtil.existsFile(mediaFile.filePath)) {
-                    mediaFile.folderName = FileUtil.getParentFileName(mediaFile.filePath)
-                    mediaFile.folderPath = FileUtil.getParentFilePath(mediaFile.filePath)
+                if (FileUtil.existsFile(mediaFile.filePath!!)) {
+                    mediaFile.folderName = FileUtil.getParentFileName(mediaFile.filePath!!)
+                    mediaFile.folderPath = FileUtil.getParentFilePath(mediaFile.filePath!!)
                 } else {
                     continue
                 }
@@ -116,7 +116,7 @@ class MediaHelper(private val activity: Activity) {
                 } else {
                     mediaFolder.folderName = mediaFile.folderName
                     mediaFolder.fileData.add(mediaFile)
-                    mediaFolder.firstFilePath = mediaFile.filePath
+                    mediaFolder.firstFilePath = mediaFile.filePath!!
                     folderData.add(mediaFolder)
                 }
                 mAllFileData.add(mediaFile)
@@ -134,7 +134,7 @@ class MediaHelper(private val activity: Activity) {
                 allMediaFolder.folderPath = Const.ALL_FILE
                 allMediaFolder.folderName = Const.ALL_FILE
                 allMediaFolder.firstFilePath =
-                    if (isShowCamera) mAllFileData[1].filePath else mAllFileData[0].filePath
+                    if (isShowCamera) mAllFileData[1].filePath!! else mAllFileData[0].filePath!!
                 allMediaFolder.fileData.addAll(mAllFileData)
                 allMediaFolder.isCheck = true
                 folderData.add(0, allMediaFolder)
@@ -143,7 +143,7 @@ class MediaHelper(private val activity: Activity) {
                     val videoMediaFolder = MediaSelectorFolder()
                     videoMediaFolder.folderPath = Const.ALL_VIDEO
                     videoMediaFolder.folderName = Const.ALL_VIDEO
-                    videoMediaFolder.firstFilePath = mVideoFileData[0].filePath
+                    videoMediaFolder.firstFilePath = mVideoFileData[0].filePath!!
                     videoMediaFolder.fileData.addAll(mVideoFileData)
                     videoMediaFolder.isAllVideo = true
                     folderData.add(folderData.indexOf(allMediaFolder) + 1, videoMediaFolder)

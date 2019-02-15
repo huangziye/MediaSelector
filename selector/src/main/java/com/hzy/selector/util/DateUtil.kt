@@ -9,7 +9,7 @@ object DateUtil {
     fun videoDuration(videoDuration: Long): String {
         val sb = StringBuilder()
         if (videoDuration >= 1000) {
-            val second = (videoDuration / 1000) as Int
+            val second = (videoDuration / 1000).toInt()
             if (second / 60 >= 1) {
                 val minute = second / 60
                 val remainderSecond = second % 60

@@ -2,12 +2,10 @@ package com.hzy.selector.bean
 
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.annotation.NonNull
 import android.text.TextUtils
 import com.hzy.selector.util.FileUtil
 import utils.bean.ImageConfig
 import java.io.File
-import java.lang.NullPointerException
 
 
 /**
@@ -16,10 +14,10 @@ import java.lang.NullPointerException
  * @date: 2019/2/11
  */
 class MediaSelectorFile() : Parcelable {
-    lateinit var fileName: String
-    lateinit var filePath: String
-    lateinit var folderName: String
-    lateinit var folderPath: String
+    var fileName: String? = null
+    var filePath: String? = null
+    var folderName: String? = null
+    var folderPath: String? = null
     var fileSize: Int = 0
     var width: Int = 0
     var height: Int = 0
@@ -38,7 +36,10 @@ class MediaSelectorFile() : Parcelable {
             return arrayOfNulls(size)
         }
 
-        fun checkFileToThis(file: File): MediaSelectorFile {
+        /**
+         * 选中该文件
+         */
+        fun selectThisFile(file: File): MediaSelectorFile {
             val mediaFile = MediaSelectorFile()
             mediaFile.fileName = file.name
             mediaFile.filePath = file.absolutePath

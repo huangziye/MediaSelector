@@ -64,7 +64,7 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
         initEvent()
     }
 
-    fun initView() {
+    private fun initView() {
         EventBus.getDefault().register(this)
         iv_back.setOnClickListener(this)
         tv_finish.setOnClickListener(this)
@@ -73,7 +73,7 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
         recyclerView.layoutManager = GridLayoutManager(this, 4)
     }
 
-    fun initData() {
+    private fun initData() {
         val mediaHelper = MediaHelper(this)
         mCheckMediaFileData = mutableListOf()
         if (null == mMediaFileAdapter) {
@@ -112,7 +112,7 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
                 if (mMediaFileData[position].isShowCamera) {
                     openCamera()
                 } else {
-                    if (mOptions.isCrop && mOptions.maxChooseMedia === 1 && mOptions.isShowVideo && mMediaFileData[position].isVideo) run {
+                    if (mOptions.isCrop && mOptions.maxChooseMedia == 1 && mOptions.isShowVideo && mMediaFileData[position].isVideo) run {
                         Toast.makeText(this@MediaActivity, R.string.video_not_crop, Toast.LENGTH_SHORT).show()
                     } else {
                         toPreviewActivity(position, mMediaFileData, mCheckMediaFileData)
@@ -159,7 +159,6 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
      */
     fun openCamera() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        //  cameraIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         if (cameraIntent.resolveActivity(packageManager) != null) {
             mCameraFile = FileUtil.createImageFile(this@MediaActivity)
@@ -212,7 +211,7 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
                 if (requestCode == Const.REQUEST_CAMERA_CODE) {
                     if (FileUtil.existsFile(mCameraFile!!.absolutePath)) {
                         FileUtil.scanImage(this, mCameraFile!!)
-                        val mediaSelectorFile = MediaSelectorFile.checkFileToThis(mCameraFile!!)
+                        val mediaSelectorFile = MediaSelectorFile.selectThisFile(mCameraFile!!)
                         if (mediaSelectorFile.hasData()) {
                             mCheckMediaFileData.add(mediaSelectorFile)
                         }
@@ -238,7 +237,7 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
                     override fun resultFilesSucceed(list: List<File>) {
                         mCheckMediaFileData.clear()
                         for (file in list) {
-                            mCheckMediaFileData.add(MediaSelectorFile.checkFileToThis(file))
+                            mCheckMediaFileData.add(MediaSelectorFile.selectThisFile(file))
                         }
                         resultMediaIntent()
                         if (viewGroup.indexOfChild(inflate) != -1) {
@@ -289,11 +288,13 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
     fun onMessageEvent(event: MessageEvent) {
         when (event.getEventType()) {
             MessageEvent.HANDING_DATA_IN_PREVIEW_PAGE -> {
-                var checkMediaData = event.getData() as MutableList<MediaSelectorFile>
-                if (checkMediaData.size > 0) {
-                    mCheckMediaFileData.clear()
-                    mCheckMediaFileData.addAll(checkMediaData)
-                    resultMediaIntent()
+                if (event.getData() != null) {
+                    var checkMediaData = event.getData() as MutableList<MediaSelectorFile>
+                    if (checkMediaData.size > 0) {
+                        mCheckMediaFileData.clear()
+                        mCheckMediaFileData.addAll(checkMediaData)
+                        resultMediaIntent()
+                    }
                 }
             }
             MessageEvent.SELECTOR_IN_PREVIEW_PAGE -> {

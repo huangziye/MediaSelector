@@ -28,7 +28,7 @@ class MediaCheckAdapter(private val context: Context, private val mediaCheckData
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.mIvMediaType.visibility = if (mediaCheckDataList[position].isVideo) View.VISIBLE else View.GONE
-        GlideUtil.loadImage(context, mediaCheckDataList[position].filePath, holder.mIvItem)
+        GlideUtil.loadImage(context, mediaCheckDataList[position].filePath!!, holder.mIvItem)
         holder.mIvItem.setBackgroundResource(if (mPreviewMedia!!.filePath == mediaCheckDataList[position].filePath) R.drawable.shape_media_check else R.drawable.shape_media_uncheck)
         holder.itemView.setOnClickListener { v ->
             mOnRecyclerItemClickListener?.onItemClick(v, position)

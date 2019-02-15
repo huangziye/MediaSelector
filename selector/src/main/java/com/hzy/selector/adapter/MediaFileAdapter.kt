@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.hzy.selector.MediaSelector
 import com.hzy.selector.R
@@ -49,7 +50,7 @@ class MediaFileAdapter(
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
             holder.mIvCheck.visibility = if (options.maxChooseMedia > 1) View.VISIBLE else View.GONE
-            GlideUtil.loadImage(context, mediaFileDataList[position].filePath, holder.mIvData)
+            GlideUtil.loadImage(context, mediaFileDataList[position].filePath!!, holder.mIvData)
             holder.mIvCheck.setImageResource(if (mediaFileDataList[position].isCheck) R.mipmap.ic_image_checked else R.mipmap.ic_image_unchecked)
             holder.mViewLay.visibility = if (mediaFileDataList[position].isCheck) View.VISIBLE else View.GONE
 
@@ -94,6 +95,9 @@ class MediaFileAdapter(
             setRootGroupParams(mRootGroup)
         }
 
+        /**
+         * 设置padding
+         */
         private fun setRootGroupParams(viewGroup: ViewGroup) {
             val mGroupParams = viewGroup.layoutParams
             mGroupParams.width = viewGroup.context.resources.displayMetrics.widthPixels / 4
