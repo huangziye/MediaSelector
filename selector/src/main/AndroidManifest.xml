@@ -6,7 +6,7 @@
     <application
             android:allowBackup="true"
             android:supportsRtl="true">
-        <activity android:name=".MediaSelectorActivity"
+        <activity android:name=".MediaActivity"
                   android:theme="@style/AppTheme.NoActionBar"
                   android:screenOrientation="portrait"/>
         <activity android:name=".PreviewActivity"

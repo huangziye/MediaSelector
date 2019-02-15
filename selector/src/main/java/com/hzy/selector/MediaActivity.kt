@@ -26,7 +26,7 @@ import com.hzy.selector.util.FileUtil
 import com.hzy.selector.util.StatusBarUtil
 import com.hzy.selector.widget.FolderWindow
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
-import kotlinx.android.synthetic.main.activity_media_selector.*
+import kotlinx.android.synthetic.main.activity_media.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -41,7 +41,7 @@ import java.util.*
  * @author: ziye_huang
  * @date: 2019/2/11
  */
-class MediaSelectorActivity : AppCompatActivity(), View.OnClickListener {
+class MediaActivity : AppCompatActivity(), View.OnClickListener {
 
     private var mMediaFileAdapter: MediaFileAdapter? = null
     private lateinit var mMediaFileData: MutableList<MediaSelectorFile>
@@ -49,16 +49,13 @@ class MediaSelectorActivity : AppCompatActivity(), View.OnClickListener {
     private var mMediaFolderData: MutableList<MediaSelectorFolder>? = null
     private var mFolderWindow: FolderWindow? = null
     private lateinit var mOptions: MediaSelector.MediaOptions
-    //    private lateinit var mCameraFile: File
-//    private var mTvTop: TextView
-//    private var mTvBottom: TextView
     private var mStatusBarColor = R.color.status_bar_color
     private var mCameraFile: File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         StatusBarUtil.setStatusBarColor(this, ContextCompat.getColor(this, mStatusBarColor))
-        setContentView(R.layout.activity_media_selector)
+        setContentView(R.layout.activity_media)
         setSupportActionBar(toolbar)
 
         initView()
@@ -71,7 +68,6 @@ class MediaSelectorActivity : AppCompatActivity(), View.OnClickListener {
         EventBus.getDefault().register(this)
         iv_back.setOnClickListener(this)
         tv_finish.setOnClickListener(this)
-//        tv_dictory.setOnClickListener(this)
         rl_dir.setOnClickListener(this)
         tv_preview.setOnClickListener(this)
         recyclerView.layoutManager = GridLayoutManager(this, 4)
@@ -117,7 +113,7 @@ class MediaSelectorActivity : AppCompatActivity(), View.OnClickListener {
                     openCamera()
                 } else {
                     if (mOptions.isCrop && mOptions.maxChooseMedia === 1 && mOptions.isShowVideo && mMediaFileData[position].isVideo) run {
-                        Toast.makeText(this@MediaSelectorActivity, R.string.video_not_crop, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MediaActivity, R.string.video_not_crop, Toast.LENGTH_SHORT).show()
                     } else {
                         toPreviewActivity(position, mMediaFileData, mCheckMediaFileData)
                     }
@@ -136,7 +132,7 @@ class MediaSelectorActivity : AppCompatActivity(), View.OnClickListener {
                         mCheckMediaFileData.add(mMediaFileData[position])
                     } else {
                         Toast.makeText(
-                            this@MediaSelectorActivity,
+                            this@MediaActivity,
                             getString(R.string.max_choose_media, mOptions.maxChooseMedia.toString()),
                             Toast.LENGTH_SHORT
                         ).show()
@@ -150,9 +146,9 @@ class MediaSelectorActivity : AppCompatActivity(), View.OnClickListener {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == 0) {
-                    Glide.with(this@MediaSelectorActivity).resumeRequests()
+                    Glide.with(this@MediaActivity).resumeRequests()
                 } else {
-                    Glide.with(this@MediaSelectorActivity).pauseRequests()
+                    Glide.with(this@MediaActivity).pauseRequests()
                 }
             }
         })
@@ -166,8 +162,8 @@ class MediaSelectorActivity : AppCompatActivity(), View.OnClickListener {
         //  cameraIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         if (cameraIntent.resolveActivity(packageManager) != null) {
-            mCameraFile = FileUtil.createImageFile(this@MediaSelectorActivity)
-            val cameraUri = FileUtil.fileToUri(this@MediaSelectorActivity, mCameraFile!!, cameraIntent)
+            mCameraFile = FileUtil.createImageFile(this@MediaActivity)
+            val cameraUri = FileUtil.fileToUri(this@MediaActivity, mCameraFile!!, cameraIntent)
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri)
             startActivityForResult(cameraIntent, Const.REQUEST_CAMERA_CODE)
         }
@@ -232,7 +228,7 @@ class MediaSelectorActivity : AppCompatActivity(), View.OnClickListener {
             if (mOptions.isCompress && !mOptions.isShowVideo) {
                 val viewGroup = window.decorView as ViewGroup
                 val inflate =
-                    LayoutInflater.from(this@MediaSelectorActivity)
+                    LayoutInflater.from(this@MediaActivity)
                         .inflate(R.layout.item_loading_view, viewGroup, false)
                 compressImage(mCheckMediaFileData, object : CompressImageTask.OnImagesResult {
                     override fun startCompress() {

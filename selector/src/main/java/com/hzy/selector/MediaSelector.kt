@@ -36,11 +36,11 @@ class MediaSelector {
 
     fun openMediaSelectorActivity() {
         if (mSoftActivity != null) {
-            val intent = Intent(mSoftActivity, MediaSelectorActivity::class.java)
+            val intent = Intent(mSoftActivity, MediaActivity::class.java)
             intent.putExtra(Const.KEY_OPEN_MEDIA, mMediaOptions)
             mSoftActivity?.startActivityForResult(intent, Const.CODE_REQUEST_MEDIA)
         } else if (mSoftFragment != null) {
-            val intent = Intent(mSoftFragment?.context, MediaSelectorActivity::class.java)
+            val intent = Intent(mSoftFragment?.context, MediaActivity::class.java)
             intent.putExtra(Const.KEY_OPEN_MEDIA, mMediaOptions)
             mSoftFragment?.startActivityForResult(intent, Const.CODE_REQUEST_MEDIA)
         }

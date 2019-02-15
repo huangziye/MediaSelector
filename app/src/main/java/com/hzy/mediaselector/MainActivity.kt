@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.hzy.selector.MediaSelector
-import com.hzy.selector.MediaSelectorActivity
 import com.hzy.selector.resolver.Const
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -23,7 +22,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.btn_open -> {
                 MediaSelector.with(this).openMediaSelectorActivity()
-//                startActivity(Intent(this, MediaSelectorActivity::class.java))
+//                startActivity(Intent(this, MediaActivity::class.java))
             }
         }
     }
