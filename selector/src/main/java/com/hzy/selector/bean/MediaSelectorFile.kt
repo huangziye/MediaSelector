@@ -18,11 +18,11 @@ import java.lang.NullPointerException
 class MediaSelectorFile() : Parcelable {
     lateinit var fileName: String
     lateinit var filePath: String
+    lateinit var folderName: String
+    lateinit var folderPath: String
     var fileSize: Int = 0
     var width: Int = 0
     var height: Int = 0
-    lateinit var folderName: String
-    lateinit var folderPath: String
     var isCheck: Boolean = false
     var isShowCamera: Boolean = false
     var isVideo: Boolean = false
@@ -91,15 +91,10 @@ class MediaSelectorFile() : Parcelable {
     override fun equals(obj: Any?): Boolean {
         if (obj != null && obj is MediaSelectorFile) {
             val mediaSelectorFile = obj as MediaSelectorFile?
-            if (mediaSelectorFile!!.filePath != null && this.filePath != null &&
-                mediaSelectorFile.filePath == filePath
-            ) {
-                return true
-            }
+            if (mediaSelectorFile!!.filePath == filePath) return true
         }
         return super.equals(obj)
     }
-
 
     fun hasData(): Boolean {
         return (!TextUtils.isEmpty(fileName) && TextUtils.getTrimmedLength(fileName) > 0

@@ -82,7 +82,6 @@ object ScreenUtil {
             val decorView = activity.window.decorView
             decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         }
-
     }
 
     /**

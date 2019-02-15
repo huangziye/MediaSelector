@@ -378,7 +378,7 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
                     options.setActiveWidgetColor(ContextCompat.getColor(this, mOptions.themeColor))
                     UCrop.of(
                         Uri.fromFile(File(mCheckMediaData!![0].filePath)),
-                        Uri.fromFile(FileUtil.resultImageFile(this, "Crop"))
+                        Uri.fromFile(FileUtil.createImageFile(this, "Crop"))
                     )
                         .withAspectRatio(mOptions.scaleX.toFloat(), mOptions.scaleY.toFloat())
                         .withMaxResultSize(mOptions.cropWidth, mOptions.cropHeight)

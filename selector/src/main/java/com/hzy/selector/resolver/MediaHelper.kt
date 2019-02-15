@@ -112,7 +112,7 @@ class MediaHelper(private val activity: Activity) {
                 mediaFolder.folderPath = mediaFile.folderPath
                 //首先判断该文件的父文件夹有没有在集合中？有的话直接把文件加入对应的文件夹：没有就新建一个文件夹再添加进去
                 if (folderData.size > 0 && folderData.contains(mediaFolder) && folderData.indexOf(mediaFolder) >= 0) {
-                    folderData.get(folderData.indexOf(mediaFolder)).fileData.add(mediaFile)
+                    folderData[folderData.indexOf(mediaFolder)].fileData.add(mediaFile)
                 } else {
                     mediaFolder.folderName = mediaFile.folderName
                     mediaFolder.fileData.add(mediaFile)

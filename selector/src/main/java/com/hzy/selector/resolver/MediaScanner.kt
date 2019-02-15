@@ -10,13 +10,13 @@ import java.io.File
  * @author: ziye_huang
  * @date: 2019/2/11
  */
-class MediaScanner(private val context: Context, private val imageFile: File) :
+class MediaScanner(context: Context, private val imageFile: File) :
     MediaScannerConnection.MediaScannerConnectionClient {
 
     private val mMediaScannerConnection: MediaScannerConnection = MediaScannerConnection(context, this)
 
     override fun onMediaScannerConnected() {
-
+        mMediaScannerConnection.scanFile(imageFile.absolutePath, "image")
     }
 
     override fun onScanCompleted(path: String?, uri: Uri?) {

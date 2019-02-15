@@ -4,12 +4,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import android.widget.CompoundButton
-import android.widget.ImageView
 import androidx.annotation.NonNull
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.github.chrisbanes.photoview.OnPhotoTapListener
 import com.github.chrisbanes.photoview.PhotoView
 import com.hzy.selector.R
 import com.hzy.selector.bean.MediaSelectorFile
@@ -21,7 +18,7 @@ import com.hzy.selector.util.ScreenUtil
  * @author: ziye_huang
  * @date: 2019/2/13
  */
-class PreviewAdapter(private val data: MutableList<MediaSelectorFile>) : PagerAdapter() {
+class PreviewAdapter(private val mediaFileData: MutableList<MediaSelectorFile>) : PagerAdapter() {
 
     lateinit var mCbPlay: CheckBox
     private var mChildCount: Int = 0
@@ -30,7 +27,7 @@ class PreviewAdapter(private val data: MutableList<MediaSelectorFile>) : PagerAd
 
     override fun isViewFromObject(view: View, obj: Any): Boolean = view == obj
 
-    override fun getCount(): Int = if (data.isEmpty()) 0 else data.size
+    override fun getCount(): Int = if (mediaFileData.isEmpty()) 0 else mediaFileData.size
 
     override fun notifyDataSetChanged() {
         mChildCount = count
@@ -50,7 +47,7 @@ class PreviewAdapter(private val data: MutableList<MediaSelectorFile>) : PagerAd
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        if (data[position].isVideo) {
+        if (mediaFileData[position].isVideo) {
             val inflate =
                 LayoutInflater.from(container.context).inflate(R.layout.item_video_play_view, container, false)
             container.addView(inflate)
@@ -61,7 +58,7 @@ class PreviewAdapter(private val data: MutableList<MediaSelectorFile>) : PagerAd
             layoutParams.width = ScreenUtil.screenWidth(container.context)
             layoutParams.height = ScreenUtil.screenHeight(container.context)
             photoView.layoutParams = layoutParams
-            GlideUtil.loadImage(container.context, data[position].filePath, photoView, false)
+            GlideUtil.loadImage(container.context, mediaFileData[position].filePath, photoView, false)
             mCbPlay.setOnCheckedChangeListener { buttonView, isChecked ->
                 if (isChecked && mOnPreviewVideoClickListener != null) {
                     mOnPreviewVideoClickListener!!.onVideoClick(mCbPlay, position)
@@ -76,12 +73,15 @@ class PreviewAdapter(private val data: MutableList<MediaSelectorFile>) : PagerAd
             layoutParams.width = ScreenUtil.screenWidth(container.context)
             layoutParams.height = ScreenUtil.screenHeight(container.context)
             photoView.layoutParams = layoutParams
-            GlideUtil.loadImage(container.context, data[position].filePath, photoView, false)
+            GlideUtil.loadImage(container.context, mediaFileData[position].filePath, photoView, false)
             clickPhotoView(photoView)
             return photoView
         }
     }
 
+    /**
+     * 点击PhotoView
+     */
     private fun clickPhotoView(@NonNull photoView: PhotoView) {
         photoView.setOnPhotoTapListener { view, x, y ->
             mOnPreviewViewClickListener?.onPreviewClick(view)

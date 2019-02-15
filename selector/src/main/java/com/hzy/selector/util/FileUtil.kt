@@ -44,7 +44,7 @@ object FileUtil {
         return file.exists() && file.isFile
     }
 
-    fun outCameraFileDirectory(context: Context): File {
+    fun createCameraFileDirectory(context: Context): File {
         var rootFile = context.filesDir
         rootFile = File("${rootFile.absolutePath}/images")
         if (!rootFile.exists() || !rootFile.isDirectory) {
@@ -54,7 +54,7 @@ object FileUtil {
     }
 
 
-    fun outFileDirectory(context: Context, folderName: String): File {
+    fun createFileDirectory(context: Context, folderName: String): File {
         var rootFile = context.filesDir
         rootFile = File(rootFile.absolutePath + "/" + folderName)
         if (!rootFile.exists() || !rootFile.isDirectory) {
@@ -66,15 +66,15 @@ object FileUtil {
     /**
      * 生成图片文件
      */
-    fun resultImageFile(context: Context): File {
-        return File(outCameraFileDirectory(context).absolutePath, "temp" + System.currentTimeMillis() + ".jpg")
+    fun createImageFile(context: Context): File {
+        return File(createCameraFileDirectory(context).absolutePath, "temp" + System.currentTimeMillis() + ".jpg")
     }
 
     /**
      * 生成图片文件
      */
-    fun resultImageFile(context: Context, folderName: String): File {
-        return File(outFileDirectory(context, folderName).absolutePath, "temp" + System.currentTimeMillis() + ".jpg")
+    fun createImageFile(context: Context, folderName: String): File {
+        return File(createFileDirectory(context, folderName).absolutePath, "temp" + System.currentTimeMillis() + ".jpg")
     }
 
     fun fileToUri(context: Context, file: File, intent: Intent): Uri {
@@ -99,6 +99,9 @@ object FileUtil {
         return uri
     }
 
+    /**
+     * 扫描图片
+     */
     fun scanImage(context: Context, file: File) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val ms = MediaScanner(context, file)

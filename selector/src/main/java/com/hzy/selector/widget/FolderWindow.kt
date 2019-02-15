@@ -35,12 +35,10 @@ class FolderWindow(private val context: Context, private val folderData: Mutable
     private var mViewRoot: View? = null
     private var mShowView: View? = null
 
-
     init {
         createWindows()
         initEvent()
     }
-
 
     private fun initEvent() {
         mViewRoot!!.setOnClickListener { this@FolderWindow.dismissWindows() }
@@ -101,16 +99,15 @@ class FolderWindow(private val context: Context, private val folderData: Mutable
 
     @SuppressLint("ObjectAnimatorBinding")
     private fun windowAnimation(isOpen: Boolean) {
-        val objectAnimator: ObjectAnimator
-        if (isOpen) {
-            objectAnimator = ObjectAnimator.ofFloat(
+        val objectAnimator: ObjectAnimator = if (isOpen) {
+            ObjectAnimator.ofFloat(
                 mViewRoot,
                 "translationY",
                 (ScreenUtil.screenHeight(context) - ScreenUtil.dp2px(context, mShowView!!.height.toFloat())).toFloat(),
                 0f
             )
         } else {
-            objectAnimator = ObjectAnimator.ofFloat(
+            ObjectAnimator.ofFloat(
                 mViewRoot, "translationY", 0f,
                 (ScreenUtil.screenHeight(context) - ScreenUtil.dp2px(context, mShowView!!.height.toFloat())).toFloat()
             )

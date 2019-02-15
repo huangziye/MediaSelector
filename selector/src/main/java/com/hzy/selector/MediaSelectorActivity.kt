@@ -1,6 +1,5 @@
 package com.hzy.selector
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -10,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
@@ -168,7 +166,7 @@ class MediaSelectorActivity : AppCompatActivity(), View.OnClickListener {
         //  cameraIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         if (cameraIntent.resolveActivity(packageManager) != null) {
-            mCameraFile = FileUtil.resultImageFile(this@MediaSelectorActivity)
+            mCameraFile = FileUtil.createImageFile(this@MediaSelectorActivity)
             val cameraUri = FileUtil.fileToUri(this@MediaSelectorActivity, mCameraFile!!, cameraIntent)
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri)
             startActivityForResult(cameraIntent, Const.REQUEST_CAMERA_CODE)
