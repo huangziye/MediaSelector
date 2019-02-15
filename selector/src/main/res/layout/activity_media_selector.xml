@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/status_bar_color"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            app:title="@string/image_and_video"
+            app:titleTextColor="@android:color/white"
+            app:contentInsetStart="0dp">
+        <RelativeLayout android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+            <ImageView
+                    android:id="@+id/iv_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_back"/>
+            <TextView android:id="@+id/tv_title"
+                      android:text="@string/image_and_video"
+                      android:textColor="@android:color/white"
+                      android:gravity="center_vertical"
+                      android:layout_toRightOf="@+id/iv_back"
+                      android:textSize="18dp"
+                      android:layout_width="wrap_content"
+                      android:layout_height="match_parent"/>
+            <TextView
+                    android:id="@+id/tv_finish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:textSize="16dp"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@drawable/text_color_selector"
+                    android:background="@drawable/btn_green_selector"
+                    android:layout_centerVertical="true"
+                    android:enabled="false"
+                    android:layout_marginRight="10dp"
+                    android:text="@string/finish"/>
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:overScrollMode="never"
+            android:layout_below="@+id/toolbar"
+            android:layout_above="@+id/rl_bottom"/>
+
+    <RelativeLayout
+            android:id="@+id/rl_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/status_bar_color"
+            android:layout_alignParentBottom="true">
+        <RelativeLayout
+                android:id="@+id/rl_dir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:clickable="true">
+            <TextView android:id="@+id/tv_dictory"
+                      android:text="@string/image_and_video"
+                      android:textColor="@android:color/white"
+                      android:layout_centerVertical="true"
+                      android:textSize="18dp"
+                      android:singleLine="true"
+                      android:maxWidth="200dp"
+                      android:layout_marginLeft="10dp"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"/>
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_dirctory"
+                    android:layout_alignBottom="@+id/tv_dictory"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_toRightOf="@+id/tv_dictory"/>
+        </RelativeLayout>
+        <TextView android:id="@+id/tv_preview"
+                  android:text="@string/preview"
+                  android:textColor="@android:color/white"
+                  android:gravity="center_vertical"
+                  android:textSize="18dp"
+                  android:layout_marginRight="10dp"
+                  android:layout_alignParentRight="true"
+                  android:layout_width="wrap_content"
+                  android:layout_height="match_parent"/>
+    </RelativeLayout>
+</RelativeLayout>

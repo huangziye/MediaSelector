@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Selector</string>
+    <string name="image_and_video">图片和视频</string>
+    <string name="finish">完成</string>
+    <string name="finish_count">完成(%s/%s)</string>
+    <string name="count_sum_count">%s/%s</string>
+    <string name="preview">预览</string>
+    <string name="preview_count">预览(%s)</string>
+    <string name="selector">选择</string>
+    <string name="max_choose_media">最大选择%s张</string>
+    <string name="how_match_pieces">%s张</string>
+    <string name="edit">编辑</string>
+    <string name="crop_image_fail">裁剪图片失败</string>
+    <string name="video_not_crop">视频不支持裁剪</string>
+    <string name="file_not_exit">文件不存在</string>
+</resources>

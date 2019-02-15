@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="status_bar_color">#393e46</color>
+    <color name="status_bar_color_with_alpha">#A0393e46</color>
+    <color name="btn_green_disable_color">#44D88C</color>
+    <color name="btn_green_enable_color">#07C160</color>
+    <color name="btn_green_enable_press_color">#06AE56</color>
+    <color name="colorText">#FFEEEEEE</color>
+    <color name="colorTextUnSelector">#FF285428</color>
+    <color name="colorTextSelector">#FF1F8F1F</color>
+    <color name="colorTheme">#FF303030</color>
+    <color name="color80000000">#80000000</color>
+    <color name="colorA0000000">#A0000000</color>
+    <color name="colorFF333333">#FF333333</color>
+    <color name="colorFFE1E1E1">#FFE1E1E1</color>
+    <color name="divider_color">#50E1E1E1</color>
+</resources>
