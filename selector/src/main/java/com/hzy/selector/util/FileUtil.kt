@@ -10,6 +10,7 @@ import android.os.Environment
 import androidx.core.content.FileProvider
 import com.hzy.selector.resolver.MediaScanner
 import java.io.File
+import java.text.DecimalFormat
 
 
 /**
@@ -45,7 +46,7 @@ object FileUtil {
         return file.exists() && file.isFile
     }
 
-    fun createCameraFileDirectory(context: Context): File {
+    fun createDirectory(context: Context): File {
         val storageState = Environment.getExternalStorageState()
         var rootFile =
             if (storageState == Environment.MEDIA_MOUNTED) Environment.getExternalStorageDirectory() else context.cacheDir
@@ -57,7 +58,7 @@ object FileUtil {
     }
 
 
-    fun createFileDirectory(context: Context, folderName: String): File {
+    fun createDirectory(context: Context, folderName: String): File {
         val storageState = Environment.getExternalStorageState()
         var rootFile =
             if (storageState == Environment.MEDIA_MOUNTED) Environment.getExternalStorageDirectory() else context.cacheDir
@@ -72,14 +73,14 @@ object FileUtil {
      * 生成图片文件
      */
     fun createImageFile(context: Context): File {
-        return File(createCameraFileDirectory(context).absolutePath, "temp" + System.currentTimeMillis() + ".jpg")
+        return File(createDirectory(context).absolutePath, "temp" + System.currentTimeMillis() + ".jpg")
     }
 
     /**
      * 生成图片文件
      */
     fun createImageFile(context: Context, folderName: String): File {
-        return File(createFileDirectory(context, folderName).absolutePath, "temp" + System.currentTimeMillis() + ".jpg")
+        return File(createDirectory(context, folderName).absolutePath, "temp" + System.currentTimeMillis() + ".jpg")
     }
 
     fun fileToUri(context: Context, file: File, intent: Intent): Uri {
@@ -132,5 +133,21 @@ object FileUtil {
             bitmap.recycle()
         }
         return options
+    }
+
+    /**
+     * 将文件大小转换成字节
+     * @param fileSize
+     * @return
+     */
+    fun formatFileSize(fileSize: Long): String {
+        val df = DecimalFormat("#.00")
+        return when {
+            fileSize < 1024 -> df.format(fileSize) + "B"
+            fileSize > 104875 -> df.format(fileSize / 1024) + "K"
+            fileSize > 1073741824 -> df.format(fileSize / 104875) + "M"
+            else -> df.format(fileSize / 1073741824) + "G"
+        }
+
     }
 }

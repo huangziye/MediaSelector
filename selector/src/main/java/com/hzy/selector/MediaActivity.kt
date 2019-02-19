@@ -14,6 +14,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.hzy.compress.ImageCompress
+import com.hzy.compress.ImageConfig
 import com.hzy.selector.adapter.MediaFileAdapter
 import com.hzy.selector.bean.MediaSelectorFile
 import com.hzy.selector.bean.MediaSelectorFolder
@@ -25,13 +27,10 @@ import com.hzy.selector.resolver.MediaHelper
 import com.hzy.selector.util.FileUtil
 import com.hzy.selector.util.StatusBarUtil
 import com.hzy.selector.widget.FolderWindow
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import kotlinx.android.synthetic.main.activity_media.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import utils.bean.ImageConfig
-import utils.task.CompressImageTask
 import java.io.File
 import java.util.*
 
@@ -229,14 +228,16 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
                 val inflate =
                     LayoutInflater.from(this@MediaActivity)
                         .inflate(R.layout.item_loading_view, viewGroup, false)
-                compressImage(mCheckMediaFileData, object : CompressImageTask.OnImagesResult {
-                    override fun startCompress() {
-                        viewGroup.addView(inflate)
+                compressImage(mCheckMediaFileData, object : ImageCompress.OnCompressImageListCallback{
+                    override fun onCompressError(errorMsg: String) {
+                        if (viewGroup.indexOfChild(inflate) != -1) {
+                            viewGroup.removeView(inflate)
+                        }
                     }
 
-                    override fun resultFilesSucceed(list: List<File>) {
+                    override fun onCompressSuccess(fileList: List<File>) {
                         mCheckMediaFileData.clear()
-                        for (file in list) {
+                        for (file in fileList) {
                             mCheckMediaFileData.add(MediaSelectorFile.selectThisFile(file))
                         }
                         resultMediaIntent()
@@ -245,11 +246,10 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
                         }
                     }
 
-                    override fun resultFilesError() {
-                        if (viewGroup.indexOfChild(inflate) != -1) {
-                            viewGroup.removeView(inflate)
-                        }
+                    override fun onStartCompress() {
+                        viewGroup.addView(inflate)
                     }
+
                 })
             } else {
                 resultMediaIntent()
@@ -275,13 +275,13 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
      */
     private fun compressImage(
         mMediaFileData: List<MediaSelectorFile>,
-        onImagesResult: CompressImageTask.OnImagesResult
+        callback: ImageCompress.OnCompressImageListCallback
     ) {
         val configData = ArrayList<ImageConfig>()
         for (i in mMediaFileData.indices) {
-            configData.add(MediaSelectorFile.thisToDefaultImageConfig(mMediaFileData[i]))
+            configData.add(ImageConfig.getDefaultConfig(mMediaFileData[i].filePath!!))
         }
-        CompressImageTask.get().compressImages(this as RxAppCompatActivity, configData, onImagesResult)
+        ImageCompress.get().compress(this, configData, callback)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)

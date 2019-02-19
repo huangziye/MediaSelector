@@ -4,7 +4,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.text.TextUtils
 import com.hzy.selector.util.FileUtil
-import utils.bean.ImageConfig
 import java.io.File
 
 
@@ -50,10 +49,6 @@ class MediaSelectorFile() : Parcelable {
             mediaFile.folderPath = FileUtil.getParentFilePath(file.absolutePath)
             mediaFile.isCheck = true
             return mediaFile
-        }
-
-        fun thisToDefaultImageConfig(mediaFile: MediaSelectorFile): ImageConfig {
-            return ImageConfig.getDefaultConfig(mediaFile.filePath)
         }
     }
 

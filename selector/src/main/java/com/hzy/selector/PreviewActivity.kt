@@ -19,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
+import com.hzy.compress.ImageCompress
+import com.hzy.compress.ImageConfig
 import com.hzy.selector.adapter.MediaCheckAdapter
 import com.hzy.selector.adapter.PreviewAdapter
 import com.hzy.selector.bean.MediaSelectorFile
@@ -28,14 +30,11 @@ import com.hzy.selector.resolver.Const
 import com.hzy.selector.util.FileUtil
 import com.hzy.selector.util.ScreenUtil
 import com.hzy.selector.util.StatusBarUtil
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_preview.*
 import org.greenrobot.eventbus.EventBus
-import utils.bean.ImageConfig
-import utils.task.CompressImageTask
 import java.io.File
-import java.util.ArrayList
+import java.util.*
 
 /**
  * 图片预览页面
@@ -351,15 +350,17 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
             val viewGroup = window.decorView as ViewGroup
             val inflate =
                 LayoutInflater.from(this@PreviewActivity).inflate(R.layout.item_loading_view, viewGroup, false)
-            compressImage(mCheckMediaData!!, object : CompressImageTask.OnImagesResult {
-                override fun startCompress() {
-                    viewGroup.addView(inflate)
+            compressImage(mCheckMediaData!!, object : ImageCompress.OnCompressImageListCallback{
+                override fun onCompressError(errorMsg: String) {
+                    if (viewGroup.indexOfChild(inflate) != -1) {
+                        viewGroup.removeView(inflate)
+                    }
                 }
 
-                override fun resultFilesSucceed(list: List<File>) {
+                override fun onCompressSuccess(fileList: List<File>) {
                     mCheckMediaData!!.clear()
-                    for (i in list.indices) {
-                        mCheckMediaData!!.add(MediaSelectorFile.selectThisFile(list[i]))
+                    for (i in fileList.indices) {
+                        mCheckMediaData!!.add(MediaSelectorFile.selectThisFile(fileList[i]))
                     }
                     EventBus.getDefault().post(MessageEvent(MessageEvent.HANDING_DATA_IN_PREVIEW_PAGE, mCheckMediaData))
                     finish()
@@ -368,10 +369,8 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
 
-                override fun resultFilesError() {
-                    if (viewGroup.indexOfChild(inflate) != -1) {
-                        viewGroup.removeView(inflate)
-                    }
+                override fun onStartCompress() {
+                    viewGroup.addView(inflate)
                 }
             })
         } else {
@@ -406,13 +405,13 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
      */
     private fun compressImage(
         mMediaFileData: List<MediaSelectorFile>,
-        onImagesResult: CompressImageTask.OnImagesResult
+        callback: ImageCompress.OnCompressImageListCallback
     ) {
         val configData = ArrayList<ImageConfig>()
         for (i in mMediaFileData.indices) {
-            configData.add(MediaSelectorFile.thisToDefaultImageConfig(mMediaFileData[i]))
+            configData.add(ImageConfig.getDefaultConfig(mMediaFileData[i].filePath!!))
         }
-        CompressImageTask.get().compressImages(this as RxAppCompatActivity, configData, onImagesResult)
+        ImageCompress.get().compress(this, configData, callback)
     }
 
     override fun onPause() {

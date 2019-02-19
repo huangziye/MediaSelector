@@ -1,15 +1,12 @@
 package com.hzy.selector.resolver
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
 import android.provider.MediaStore
 import android.text.TextUtils
 import android.widget.Toast
-import androidx.annotation.MainThread
 import androidx.annotation.Nullable
-import androidx.annotation.RequiresPermission
 import com.hzy.selector.bean.MediaSelectorFile
 import com.hzy.selector.bean.MediaSelectorFolder
 import com.hzy.selector.util.FileUtil

@@ -2,6 +2,7 @@ package com.hzy.mediaselector
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -23,8 +24,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.btn_open -> {
                 val options = MediaSelector.MediaOptions()
+                options.isCompress = true
                 options.isShowCamera = true
-                options.isShowVideo = true
+                options.isShowVideo = false
                 options.isCrop = true
                 options.maxChooseMedia = 9
                 options.themeColor = R.color.colorAccent
