@@ -5,7 +5,7 @@ package com.hzy.selector.eventbus
  * @author: ziye_huang
  * @date: 2019/2/14
  */
-class MessageEvent(private val eventType: Int, private val data: Any?) {
+internal class MessageEvent(private val eventType: Int, private val data: Any?) {
 
     companion object {
         /**
