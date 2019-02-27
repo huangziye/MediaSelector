@@ -64,7 +64,9 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun initView() {
-        EventBus.getDefault().register(this)
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
         iv_back.setOnClickListener(this)
         tv_finish.setOnClickListener(this)
         rl_dir.setOnClickListener(this)
@@ -228,7 +230,7 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
                 val inflate =
                     LayoutInflater.from(this@MediaActivity)
                         .inflate(R.layout.item_loading_view, viewGroup, false)
-                compressImage(mCheckMediaFileData, object : ImageCompress.OnCompressImageListCallback{
+                compressImage(mCheckMediaFileData, object : ImageCompress.OnCompressImageListCallback {
                     override fun onCompressError(errorMsg: String) {
                         if (viewGroup.indexOfChild(inflate) != -1) {
                             viewGroup.removeView(inflate)
@@ -371,7 +373,9 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        EventBus.getDefault().unregister(this)
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this)
+        }
     }
 
     override fun onBackPressed() {
