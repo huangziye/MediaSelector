@@ -24,7 +24,7 @@ import com.hzy.selector.util.ScreenUtil
  * @date: 2019/2/12
  */
 class MediaFileAdapter(
-    private val context: Context, private var mediaFileDataList: MutableList<MediaSelectorFile>,
+    private val context: Context, private var mediaFileDataList: ArrayList<MediaSelectorFile>,
     private var options: MediaSelector.MediaOptions
 ) : RecyclerView.Adapter<MediaFileAdapter.ViewHolder>() {
 

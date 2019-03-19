@@ -8,5 +8,5 @@ import com.hzy.selector.bean.MediaSelectorFolder
  * @date: 2019/2/12
  */
 interface LoadMediaCallback {
-    fun onLoadMediaFinish(data: MutableList<MediaSelectorFolder>)
+    fun onLoadMediaFinish(data: ArrayList<MediaSelectorFolder>)
 }

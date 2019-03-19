@@ -17,7 +17,7 @@ import com.hzy.selector.util.GlideUtil
  * @author: ziye_huang
  * @date: 2019/2/13
  */
-class MediaFolderAdapter(private val context: Context, private val mediaFolderData: MutableList<MediaSelectorFolder>) :
+class MediaFolderAdapter(private val context: Context, private val mediaFolderData: ArrayList<MediaSelectorFolder>) :
     RecyclerView.Adapter<MediaFolderAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

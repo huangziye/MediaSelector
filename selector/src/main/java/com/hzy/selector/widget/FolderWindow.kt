@@ -28,7 +28,7 @@ import com.hzy.selector.util.ScreenUtil
  * @author: ziye_huang
  * @date: 2019/2/13
  */
-class FolderWindow(private val context: Context, private val folderData: MutableList<MediaSelectorFolder>) {
+class FolderWindow(private val context: Context, private val folderData: ArrayList<MediaSelectorFolder>) {
 
     private var mPopupWindow: PopupWindow? = null
     private var mFolderAdapter: MediaFolderAdapter? = null

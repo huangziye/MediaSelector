@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -43,9 +44,9 @@ import java.util.*
 class MediaActivity : AppCompatActivity(), View.OnClickListener {
 
     private var mMediaFileAdapter: MediaFileAdapter? = null
-    private lateinit var mMediaFileData: MutableList<MediaSelectorFile>
-    private lateinit var mCheckMediaFileData: MutableList<MediaSelectorFile>
-    private var mMediaFolderData: MutableList<MediaSelectorFolder>? = null
+    private lateinit var mMediaFileData: ArrayList<MediaSelectorFile>
+    private lateinit var mCheckMediaFileData: ArrayList<MediaSelectorFile>
+    private var mMediaFolderData: ArrayList<MediaSelectorFolder>? = null
     private var mFolderWindow: FolderWindow? = null
     private lateinit var mOptions: MediaSelector.MediaOptions
     private var mStatusBarColor = R.color.status_bar_color
@@ -76,13 +77,13 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun initData() {
         val mediaHelper = MediaHelper(this)
-        mCheckMediaFileData = mutableListOf()
+        mCheckMediaFileData = arrayListOf()
         if (null == mMediaFileAdapter) {
             mMediaFileAdapter = MediaFileAdapter(this, mMediaFileData, mOptions)
             recyclerView.adapter = mMediaFileAdapter
         }
         mediaHelper.loadMedia(mOptions.isShowCamera, mOptions.isShowVideo, object : LoadMediaCallback {
-            override fun onLoadMediaFinish(data: MutableList<MediaSelectorFolder>) {
+            override fun onLoadMediaFinish(data: ArrayList<MediaSelectorFolder>) {
                 if (data.size > 0) {
                     mMediaFileData.addAll(data[0].fileData)
                     if (null == mMediaFolderData) {
@@ -100,7 +101,7 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
      * 初始化 MediaOptions
      */
     private fun initOptions() {
-        mMediaFileData = mutableListOf()
+        mMediaFileData = arrayListOf()
         mOptions = intent.getParcelableExtra(Const.KEY_OPEN_MEDIA)
         if (mOptions.maxChooseMedia <= 0) {
             mOptions.maxChooseMedia = 1

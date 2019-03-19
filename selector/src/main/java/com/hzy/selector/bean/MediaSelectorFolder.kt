@@ -12,7 +12,7 @@ import android.os.Parcel
 class MediaSelectorFolder() : Parcelable {
     var folderName: String? = null
     var folderPath: String? = null
-    var fileData: MutableList<MediaSelectorFile> = mutableListOf()
+    var fileData: ArrayList<MediaSelectorFile> = arrayListOf()
     var isCheck: Boolean = false
     lateinit var firstFilePath: String
     var isAllVideo: Boolean = false

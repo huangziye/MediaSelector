@@ -18,7 +18,7 @@ import com.hzy.selector.util.ScreenUtil
  * @author: ziye_huang
  * @date: 2019/2/13
  */
-class PreviewAdapter(private val mediaFileData: MutableList<MediaSelectorFile>) : PagerAdapter() {
+class PreviewAdapter(private val mediaFileData: ArrayList<MediaSelectorFile>) : PagerAdapter() {
 
     lateinit var mCbPlay: CheckBox
     private var mChildCount: Int = 0

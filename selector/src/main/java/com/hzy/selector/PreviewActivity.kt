@@ -34,7 +34,6 @@ import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_preview.*
 import org.greenrobot.eventbus.EventBus
 import java.io.File
-import java.util.*
 
 /**
  * 图片预览页面
@@ -43,8 +42,8 @@ import java.util.*
  */
 class PreviewActivity : AppCompatActivity(), View.OnClickListener {
 
-    private var mCheckMediaData: MutableList<MediaSelectorFile>? = null
-    private var mMediaFileData: MutableList<MediaSelectorFile>? = null
+    private var mCheckMediaData: ArrayList<MediaSelectorFile>? = null
+    private var mMediaFileData: ArrayList<MediaSelectorFile>? = null
     private var mPreviewPosition: Int = 0
     private lateinit var mOptions: MediaSelector.MediaOptions
     private lateinit var mPreviewAdapter: PreviewAdapter
@@ -72,7 +71,7 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
     private fun initData() {
         mCheckMediaData = intent.getParcelableArrayListExtra(Const.KEY_PREVIEW_CHECK_MEDIA)
         if (mCheckMediaData == null) {
-            mCheckMediaData = mutableListOf()
+            mCheckMediaData = arrayListOf()
         }
         mMediaFileData = intent.getParcelableArrayListExtra(Const.KEY_PREVIEW_DATA_MEDIA)
         mPreviewPosition = intent.getIntExtra(Const.KEY_PREVIEW_POSITION, 0)
@@ -359,8 +358,8 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
 
                 override fun onCompressSuccess(fileList: List<File>) {
                     mCheckMediaData!!.clear()
-                    for (i in fileList.indices) {
-                        mCheckMediaData!!.add(MediaSelectorFile.selectThisFile(fileList[i]))
+                    for (file in fileList) {
+                        mCheckMediaData!!.add(MediaSelectorFile.selectThisFile(file))
                     }
                     EventBus.getDefault().post(MessageEvent(MessageEvent.HANDING_DATA_IN_PREVIEW_PAGE, mCheckMediaData))
                     finish()

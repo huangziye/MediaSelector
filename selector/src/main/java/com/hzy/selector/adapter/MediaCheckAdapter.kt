@@ -16,7 +16,7 @@ import com.hzy.selector.util.GlideUtil
  * @author: ziye_huang
  * @date: 2019/2/12
  */
-class MediaCheckAdapter(private val context: Context, private val mediaCheckDataList: MutableList<MediaSelectorFile>) :
+class MediaCheckAdapter(private val context: Context, private val mediaCheckDataList: ArrayList<MediaSelectorFile>) :
     RecyclerView.Adapter<MediaCheckAdapter.ViewHolder>() {
 
     private var mPreviewMedia: MediaSelectorFile? = null

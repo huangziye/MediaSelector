@@ -64,11 +64,11 @@ class MediaHelper(private val activity: Activity) {
         )
         if (cursor != null && !cursor.isClosed && cursor.count > 0) {
             //所有的图片
-            val mAllFileData = mutableListOf<MediaSelectorFile>()
+            val mAllFileData = arrayListOf<MediaSelectorFile>()
 
             //所有文件夹
             val folderData = ArrayList<MediaSelectorFolder>()
-            val mVideoFileData = mutableListOf<MediaSelectorFile>()
+            val mVideoFileData = arrayListOf<MediaSelectorFile>()
 
             while (cursor.moveToNext()) {
                 val mediaFile = MediaSelectorFile()
