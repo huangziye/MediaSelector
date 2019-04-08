@@ -49,7 +49,7 @@ class MediaFileAdapter(
         } else {
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-            holder.mIvCheck.visibility = if (options.maxChooseMedia > 1) View.VISIBLE else View.GONE
+            holder.mIvCheck.visibility = if (options.maxChooseMedia >= 1) View.VISIBLE else View.GONE
             GlideUtil.loadImage(context, mediaFileDataList[position].filePath!!, holder.mIvData)
             holder.mIvCheck.setImageResource(if (mediaFileDataList[position].isCheck) R.mipmap.ic_image_checked else R.mipmap.ic_image_unchecked)
             holder.mViewLay.visibility = if (mediaFileDataList[position].isCheck) View.VISIBLE else View.GONE
