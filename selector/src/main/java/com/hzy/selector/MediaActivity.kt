@@ -349,7 +349,7 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
     private fun showSelectMediaFolderWindow(view: View) {
         when {
             mFolderWindow == null -> {
-                mFolderWindow = FolderWindow(this, mMediaFolderData!!)
+                mFolderWindow = FolderWindow(this, mMediaFolderData ?: arrayListOf())
                 mFolderWindow!!.setOnPopupItemClickListener(object : FolderWindow.OnPopupItemClickListener {
                     override fun onItemClick(view: View, position: Int) {
                         selectFolder(position)
