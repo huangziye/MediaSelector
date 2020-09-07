@@ -13,7 +13,7 @@ MediaSelector 高仿微信图片选择器，目前支持拍照、图片或视频
 - 使用方便，代码简洁
 
 ### 效果预览
-![效果预览](https://raw.githubusercontent.com/huangziye/MediaSelector/master/screenshot/MediaSelector.gif)
+![效果预览](./screenshot/MediaSelector.gif)
 
 
 
