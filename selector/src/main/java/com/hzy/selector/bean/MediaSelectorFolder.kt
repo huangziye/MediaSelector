@@ -20,7 +20,7 @@ class MediaSelectorFolder() : Parcelable {
     constructor(parcel: Parcel) : this() {
         folderName = parcel.readString()
         folderPath = parcel.readString()
-        fileData = parcel.createTypedArrayList(MediaSelectorFile)
+        fileData = parcel.createTypedArrayList(MediaSelectorFile) ?: arrayListOf()
         isCheck = parcel.readByte().toInt() != 0
         firstFilePath = parcel.readString()!!
         isAllVideo = parcel.readByte().toInt() != 0

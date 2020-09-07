@@ -82,19 +82,22 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
             mMediaFileAdapter = MediaFileAdapter(this, mMediaFileData, mOptions)
             recyclerView.adapter = mMediaFileAdapter
         }
-        mediaHelper.loadMedia(mOptions.isShowCamera, mOptions.isShowVideo, object : LoadMediaCallback {
-            override fun onLoadMediaFinish(data: ArrayList<MediaSelectorFolder>) {
-                if (data.size > 0) {
-                    mMediaFileData.addAll(data[0].fileData)
-                    if (null == mMediaFolderData) {
-                        mMediaFolderData = data
-                    } else {
-                        mMediaFolderData!!.addAll(data)
+        mediaHelper.loadMedia(
+            mOptions.isShowCamera,
+            mOptions.isShowVideo,
+            object : LoadMediaCallback {
+                override fun onLoadMediaFinish(data: ArrayList<MediaSelectorFolder>) {
+                    if (data.size > 0) {
+                        mMediaFileData.addAll(data[0].fileData)
+                        if (null == mMediaFolderData) {
+                            mMediaFolderData = data
+                        } else {
+                            mMediaFolderData!!.addAll(data)
+                        }
+                        mMediaFileAdapter?.notifyDataSetChanged()
                     }
-                    mMediaFileAdapter?.notifyDataSetChanged()
                 }
-            }
-        })
+            })
     }
 
     /**
@@ -102,7 +105,7 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
      */
     private fun initOptions() {
         mMediaFileData = arrayListOf()
-        mOptions = intent.getParcelableExtra(Const.KEY_OPEN_MEDIA)
+        mOptions = intent.getParcelableExtra(Const.KEY_OPEN_MEDIA)!!
         if (mOptions.maxChooseMedia <= 0) {
             mOptions.maxChooseMedia = 1
         }
@@ -115,7 +118,11 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
                     openCamera()
                 } else {
                     if (mOptions.isCrop && mOptions.maxChooseMedia == 1 && mOptions.isShowVideo && mMediaFileData[position].isVideo) run {
-                        Toast.makeText(this@MediaActivity, R.string.video_not_crop, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@MediaActivity,
+                            R.string.video_not_crop,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
                         toPreviewActivity(position, mMediaFileData, mCheckMediaFileData)
                     }
@@ -123,7 +130,8 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
 
-        mMediaFileAdapter?.setOnCheckedMediaListener(object : MediaFileAdapter.OnCheckedMediaListener {
+        mMediaFileAdapter?.setOnCheckedMediaListener(object :
+            MediaFileAdapter.OnCheckedMediaListener {
             override fun onChecked(isCheck: Boolean, position: Int) {
                 if (isCheck) {
                     mMediaFileData[position].isCheck = false
@@ -135,7 +143,10 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
                     } else {
                         Toast.makeText(
                             this@MediaActivity,
-                            getString(R.string.max_choose_media, mOptions.maxChooseMedia.toString()),
+                            getString(
+                                R.string.max_choose_media,
+                                mOptions.maxChooseMedia.toString()
+                            ),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -231,29 +242,31 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
                 val inflate =
                     LayoutInflater.from(this@MediaActivity)
                         .inflate(R.layout.item_loading_view, viewGroup, false)
-                compressImage(mCheckMediaFileData, object : ImageCompress.OnCompressImageListCallback {
-                    override fun onCompressError(errorMsg: String) {
-                        if (viewGroup.indexOfChild(inflate) != -1) {
-                            viewGroup.removeView(inflate)
+                compressImage(
+                    mCheckMediaFileData,
+                    object : ImageCompress.OnCompressImageListCallback {
+                        override fun onCompressError(errorMsg: String) {
+                            if (viewGroup.indexOfChild(inflate) != -1) {
+                                viewGroup.removeView(inflate)
+                            }
                         }
-                    }
 
-                    override fun onCompressSuccess(fileList: List<File>) {
-                        mCheckMediaFileData.clear()
-                        for (file in fileList) {
-                            mCheckMediaFileData.add(MediaSelectorFile.selectThisFile(file))
+                        override fun onCompressSuccess(fileList: List<File>) {
+                            mCheckMediaFileData.clear()
+                            for (file in fileList) {
+                                mCheckMediaFileData.add(MediaSelectorFile.selectThisFile(file))
+                            }
+                            resultMediaIntent()
+                            if (viewGroup.indexOfChild(inflate) != -1) {
+                                viewGroup.removeView(inflate)
+                            }
                         }
-                        resultMediaIntent()
-                        if (viewGroup.indexOfChild(inflate) != -1) {
-                            viewGroup.removeView(inflate)
+
+                        override fun onStartCompress() {
+                            viewGroup.addView(inflate)
                         }
-                    }
 
-                    override fun onStartCompress() {
-                        viewGroup.addView(inflate)
-                    }
-
-                })
+                    })
             } else {
                 resultMediaIntent()
             }
@@ -314,7 +327,9 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 for (i in mMediaFolderData!!.indices) {
                     if (mMediaFolderData!![i].fileData.contains(mediaSelectorFile)) {
-                        mMediaFolderData!![i].fileData[mMediaFolderData!![i].fileData.indexOf(mediaSelectorFile)].isCheck =
+                        mMediaFolderData!![i].fileData[mMediaFolderData!![i].fileData.indexOf(
+                            mediaSelectorFile
+                        )].isCheck =
                             mediaSelectorFile.isCheck
                     }
                 }
@@ -333,7 +348,10 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
         checkData: MutableList<MediaSelectorFile>
     ) {
         val intent = Intent(this, PreviewActivity::class.java)
-        intent.putParcelableArrayListExtra(Const.KEY_PREVIEW_DATA_MEDIA, data as ArrayList<out Parcelable>)
+        intent.putParcelableArrayListExtra(
+            Const.KEY_PREVIEW_DATA_MEDIA,
+            data as ArrayList<out Parcelable>
+        )
         intent.putParcelableArrayListExtra(
             Const.KEY_PREVIEW_CHECK_MEDIA,
             checkData as ArrayList<out Parcelable>
@@ -350,7 +368,8 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
         when {
             mFolderWindow == null -> {
                 mFolderWindow = FolderWindow(this, mMediaFolderData ?: arrayListOf())
-                mFolderWindow!!.setOnPopupItemClickListener(object : FolderWindow.OnPopupItemClickListener {
+                mFolderWindow!!.setOnPopupItemClickListener(object :
+                    FolderWindow.OnPopupItemClickListener {
                     override fun onItemClick(view: View, position: Int) {
                         selectFolder(position)
                     }

@@ -13,11 +13,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.animation.LinearInterpolator
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.hzy.compress.ImageCompress
 import com.hzy.compress.ImageConfig
@@ -53,13 +53,16 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        StatusBarUtil.setStatusBarColor(this, ContextCompat.getColor(this, R.color.status_bar_color))
+        StatusBarUtil.setStatusBarColor(
+            this,
+            ContextCompat.getColor(this, R.color.status_bar_color)
+        )
         setContentView(R.layout.activity_preview)
         setSupportActionBar(toolbar)
 
         //设置整个页面的背景为黑色
         window.decorView.setBackgroundColor(ContextCompat.getColor(this, android.R.color.black))
-        rv_check_media.layoutManager = LinearLayoutManager(this, LinearLayout.HORIZONTAL, false)
+        rv_check_media.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
 
         iv_back.setOnClickListener(this)
         tv_selector.setOnClickListener(this)
@@ -75,7 +78,7 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
         }
         mMediaFileData = intent.getParcelableArrayListExtra(Const.KEY_PREVIEW_DATA_MEDIA)
         mPreviewPosition = intent.getIntExtra(Const.KEY_PREVIEW_POSITION, 0)
-        mOptions = intent.getParcelableExtra(Const.KEY_OPEN_MEDIA)
+        mOptions = intent.getParcelableExtra(Const.KEY_OPEN_MEDIA)!!
 //        mTvTop.mViewRoot.setBackgroundColor(ContextCompat.getColor(this, mOptions.themeColor))
         if (mMediaFileData == null || mMediaFileData!!.size == 0) {
             Toast.makeText(this, "没有预览媒体库文件", Toast.LENGTH_SHORT).show()
@@ -95,7 +98,11 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
         tv_title.text =
-            getString(R.string.count_sum_count, (mPreviewPosition + 1).toString(), mMediaFileData!!.size.toString())
+            getString(
+                R.string.count_sum_count,
+                (mPreviewPosition + 1).toString(),
+                mMediaFileData!!.size.toString()
+            )
         updateFinishText()
 
         tv_selector.setCompoundDrawablesWithIntrinsicBounds(
@@ -144,7 +151,8 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
 
             }
         })
-        mPreviewAdapter.setOnPreviewViewClickListener(object : PreviewAdapter.OnPreviewViewClickListener {
+        mPreviewAdapter.setOnPreviewViewClickListener(object :
+            PreviewAdapter.OnPreviewViewClickListener {
             override fun onPreviewClick(view: View) {
                 if (mAnimatorSet != null && mAnimatorSet!!.isRunning) {
                     mAnimatorSet!!.end()
@@ -153,7 +161,8 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
                 isShowTitleView = !isShowTitleView
             }
         })
-        mPreviewAdapter.setOnPreviewVideoClickListener(object : PreviewAdapter.OnPreviewVideoClickListener {
+        mPreviewAdapter.setOnPreviewVideoClickListener(object :
+            PreviewAdapter.OnPreviewVideoClickListener {
             override fun onVideoClick(view: View, position: Int) {
                 try {
                     val intent = Intent()
@@ -170,7 +179,10 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
         mCheckAdapter.setOnRecyclerItemClickListener(object : OnRecyclerItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 if (mMediaFileData!!.contains(mCheckMediaData!![position])) {
-                    vp_preview.setCurrentItem(mMediaFileData!!.indexOf(mCheckMediaData!![position]), true)
+                    vp_preview.setCurrentItem(
+                        mMediaFileData!!.indexOf(mCheckMediaData!![position]),
+                        true
+                    )
                     mCheckAdapter.notifyDataSetChanged()
                 }
             }
@@ -210,7 +222,12 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
                 -(toolbar.measuredHeight).toFloat()
             )
             bottomAnimatorTranslation =
-                ObjectAnimator.ofFloat(ll_bottom, "translationY", 0f, ll_bottom.measuredHeight.toFloat())
+                ObjectAnimator.ofFloat(
+                    ll_bottom,
+                    "translationY",
+                    0f,
+                    ll_bottom.measuredHeight.toFloat()
+                )
         } else {
             val params = root.layoutParams as ViewGroup.MarginLayoutParams
             params.setMargins(
@@ -228,7 +245,12 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
                 0f
             )
             bottomAnimatorTranslation =
-                ObjectAnimator.ofFloat(ll_bottom, "translationY", ll_bottom.measuredHeight.toFloat(), 0f)
+                ObjectAnimator.ofFloat(
+                    ll_bottom,
+                    "translationY",
+                    ll_bottom.measuredHeight.toFloat(),
+                    0f
+                )
         }
         mAnimatorSet!!.duration = 300
         mAnimatorSet!!.interpolator = LinearInterpolator()
@@ -258,7 +280,12 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
                         if (FileUtil.existsFile(file.absolutePath)) {
                             mCheckMediaData!!.add(MediaSelectorFile.selectThisFile(file))
                             EventBus.getDefault()
-                                .post(MessageEvent(MessageEvent.HANDING_DATA_IN_PREVIEW_PAGE, mCheckMediaData))
+                                .post(
+                                    MessageEvent(
+                                        MessageEvent.HANDING_DATA_IN_PREVIEW_PAGE,
+                                        mCheckMediaData
+                                    )
+                                )
                             finish()
                         } else {
                             Toast.makeText(this, R.string.file_not_exit, Toast.LENGTH_SHORT).show()
@@ -288,7 +315,8 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
             R.id.tv_selector -> {
                 if (mCheckMediaData!!.size < mOptions.maxChooseMedia || mCheckMediaData!!.size == mOptions.maxChooseMedia && mMediaFileData!![mPreviewPosition].isCheck
                 ) {
-                    mMediaFileData!![mPreviewPosition].isCheck = !mMediaFileData!![mPreviewPosition].isCheck
+                    mMediaFileData!![mPreviewPosition].isCheck =
+                        !mMediaFileData!![mPreviewPosition].isCheck
                     tv_selector.setCompoundDrawablesWithIntrinsicBounds(
                         if (mMediaFileData!![mPreviewPosition].isCheck) R.mipmap.ic_preview_check else R.mipmap.ic_preview_uncheck,
                         0,
@@ -296,7 +324,12 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
                         0
                     )
                     EventBus.getDefault()
-                        .post(MessageEvent(MessageEvent.SELECTOR_IN_PREVIEW_PAGE, mMediaFileData!![mPreviewPosition]))
+                        .post(
+                            MessageEvent(
+                                MessageEvent.SELECTOR_IN_PREVIEW_PAGE,
+                                mMediaFileData!![mPreviewPosition]
+                            )
+                        )
                     if (mMediaFileData!![mPreviewPosition].isCheck) {
                         mCheckAdapter.addItemNotifyData(mMediaFileData!![mPreviewPosition])
                         rv_check_media.scrollToPosition(mCheckMediaData!!.indexOf(mMediaFileData!![mPreviewPosition]))
@@ -348,8 +381,9 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
         if (mOptions.isCompress && !mOptions.isShowVideo && !mOptions.isCrop) {
             val viewGroup = window.decorView as ViewGroup
             val inflate =
-                LayoutInflater.from(this@PreviewActivity).inflate(R.layout.item_loading_view, viewGroup, false)
-            compressImage(mCheckMediaData!!, object : ImageCompress.OnCompressImageListCallback{
+                LayoutInflater.from(this@PreviewActivity)
+                    .inflate(R.layout.item_loading_view, viewGroup, false)
+            compressImage(mCheckMediaData!!, object : ImageCompress.OnCompressImageListCallback {
                 override fun onCompressError(errorMsg: String) {
                     if (viewGroup.indexOfChild(inflate) != -1) {
                         viewGroup.removeView(inflate)
@@ -361,7 +395,12 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
                     for (file in fileList) {
                         mCheckMediaData!!.add(MediaSelectorFile.selectThisFile(file))
                     }
-                    EventBus.getDefault().post(MessageEvent(MessageEvent.HANDING_DATA_IN_PREVIEW_PAGE, mCheckMediaData))
+                    EventBus.getDefault().post(
+                        MessageEvent(
+                            MessageEvent.HANDING_DATA_IN_PREVIEW_PAGE,
+                            mCheckMediaData
+                        )
+                    )
                     finish()
                     if (viewGroup.indexOfChild(inflate) != -1) {
                         viewGroup.removeView(inflate)
@@ -380,7 +419,12 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
                     options.setToolbarColor(ContextCompat.getColor(this, mOptions.themeColor))
                     options.setStatusBarColor(ContextCompat.getColor(this, mOptions.themeColor))
                     options.setLogoColor(ContextCompat.getColor(this, mOptions.themeColor))
-                    options.setActiveWidgetColor(ContextCompat.getColor(this, mOptions.themeColor))
+                    options.setActiveControlsWidgetColor(
+                        ContextCompat.getColor(
+                            this,
+                            mOptions.themeColor
+                        )
+                    )
                     UCrop.of(
                         Uri.fromFile(File(mCheckMediaData!![0].filePath)),
                         Uri.fromFile(FileUtil.createImageFile(this, "Crop"))
@@ -393,7 +437,8 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
                     Toast.makeText(this, R.string.video_not_crop, Toast.LENGTH_SHORT).show()
                 }
             } else {
-                EventBus.getDefault().post(MessageEvent(MessageEvent.HANDING_DATA_IN_PREVIEW_PAGE, mCheckMediaData))
+                EventBus.getDefault()
+                    .post(MessageEvent(MessageEvent.HANDING_DATA_IN_PREVIEW_PAGE, mCheckMediaData))
                 finish()
             }
         }
