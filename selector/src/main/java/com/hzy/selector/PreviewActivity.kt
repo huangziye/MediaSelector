@@ -3,11 +3,13 @@ package com.hzy.selector
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +21,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.hzy.compress.ImageCompress
 import com.hzy.compress.ImageConfig
 import com.hzy.selector.adapter.MediaCheckAdapter
@@ -34,6 +38,7 @@ import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_preview.*
 import org.greenrobot.eventbus.EventBus
 import java.io.File
+import java.lang.reflect.Type
 
 /**
  * 图片预览页面
@@ -72,13 +77,15 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun initData() {
-        mCheckMediaData = intent.getParcelableArrayListExtra(Const.KEY_PREVIEW_CHECK_MEDIA)
+//        mCheckMediaData = intent.getParcelableArrayListExtra(Const.KEY_PREVIEW_CHECK_MEDIA)
+        mCheckMediaData = getObject(this, Const.KEY_PREVIEW_CHECK_MEDIA)
         if (mCheckMediaData == null) {
             mCheckMediaData = arrayListOf()
         }
-        mMediaFileData = intent.getParcelableArrayListExtra(Const.KEY_PREVIEW_DATA_MEDIA)
+//        mMediaFileData = intent.getParcelableArrayListExtra(Const.KEY_PREVIEW_DATA_MEDIA)
+        mMediaFileData = getObject(this, Const.KEY_PREVIEW_DATA_MEDIA)
         mPreviewPosition = intent.getIntExtra(Const.KEY_PREVIEW_POSITION, 0)
-        mOptions = intent.getParcelableExtra(Const.KEY_OPEN_MEDIA)!!
+        mOptions = intent.getParcelableExtra(Const.KEY_OPEN_MEDIA) ?: setDefaultOptions()
 //        mTvTop.mViewRoot.setBackgroundColor(ContextCompat.getColor(this, mOptions.themeColor))
         if (mMediaFileData == null || mMediaFileData!!.size == 0) {
             Toast.makeText(this, "没有预览媒体库文件", Toast.LENGTH_SHORT).show()
@@ -120,6 +127,33 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
         rv_check_media.adapter = mCheckAdapter
         mCheckAdapter.notifyCheckData(mMediaFileData!![mPreviewPosition])
         initAdapterEvent()
+    }
+
+
+    /**
+     * 把缓存的图片读取出来
+     */
+    private fun getObject(context: Context, key: String): ArrayList<MediaSelectorFile> {
+        val sharedPreferences = context.getSharedPreferences(Const.MEDIA_SELECTOR_FILE_NAME, Context.MODE_PRIVATE)
+        var jsonString = sharedPreferences.getString(key, "")
+        if (TextUtils.isEmpty(jsonString)) return arrayListOf()
+        val gson = Gson()
+        val listType: Type = object : TypeToken<MutableList<MediaSelectorFile>>() {}.type
+        return gson.fromJson(jsonString, listType)
+    }
+
+    /**
+     * 设置默认的MediaOptions
+     */
+    private fun setDefaultOptions(): MediaSelector.MediaOptions {
+        val options = MediaSelector.MediaOptions()
+        options.isCompress = true
+        options.isShowCamera = true
+        options.isShowVideo = false
+        options.isCrop = true
+        options.maxChooseMedia = 9
+        options.themeColor = R.color.status_bar_color
+        return options
     }
 
     private fun initAdapterEvent() {
@@ -201,56 +235,22 @@ class PreviewActivity : AppCompatActivity(), View.OnClickListener {
         if (isShowTitleView) {
             Handler().postDelayed(Runnable {
                 val params = root.layoutParams as ViewGroup.MarginLayoutParams
-                params.setMargins(
-                    0,
-                    ScreenUtil.getStatusBarHeight(this),
-                    0,
-                    0
-                )
+                params.setMargins(0, ScreenUtil.getStatusBarHeight(this), 0, 0)
                 root.layoutParams = params
 
                 //使得布局延伸到状态栏和导航栏区域
-                window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
+                window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
                 window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
             }, 200)
-            topAnimatorTranslation = ObjectAnimator.ofFloat(
-                toolbar,
-                "translationY",
-                0f,
-                -(toolbar.measuredHeight).toFloat()
-            )
-            bottomAnimatorTranslation =
-                ObjectAnimator.ofFloat(
-                    ll_bottom,
-                    "translationY",
-                    0f,
-                    ll_bottom.measuredHeight.toFloat()
-                )
+            topAnimatorTranslation = ObjectAnimator.ofFloat(toolbar, "translationY", 0f, -(toolbar.measuredHeight).toFloat())
+            bottomAnimatorTranslation = ObjectAnimator.ofFloat(ll_bottom, "translationY", 0f, ll_bottom.measuredHeight.toFloat())
         } else {
             val params = root.layoutParams as ViewGroup.MarginLayoutParams
-            params.setMargins(
-                0,
-                0,
-                0,
-                0
-            )
+            params.setMargins(0, 0, 0, 0)
             root.layoutParams = params
             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            topAnimatorTranslation = ObjectAnimator.ofFloat(
-                toolbar,
-                "translationY",
-                -(toolbar.measuredHeight).toFloat(),
-                0f
-            )
-            bottomAnimatorTranslation =
-                ObjectAnimator.ofFloat(
-                    ll_bottom,
-                    "translationY",
-                    ll_bottom.measuredHeight.toFloat(),
-                    0f
-                )
+            topAnimatorTranslation = ObjectAnimator.ofFloat(toolbar, "translationY", -(toolbar.measuredHeight).toFloat(), 0f)
+            bottomAnimatorTranslation = ObjectAnimator.ofFloat(ll_bottom, "translationY", ll_bottom.measuredHeight.toFloat(), 0f)
         }
         mAnimatorSet!!.duration = 300
         mAnimatorSet!!.interpolator = LinearInterpolator()

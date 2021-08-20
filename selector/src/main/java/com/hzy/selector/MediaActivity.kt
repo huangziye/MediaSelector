@@ -1,6 +1,7 @@
 package com.hzy.selector
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
@@ -14,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.hzy.compress.ImageCompress
 import com.hzy.compress.ImageConfig
 import com.hzy.selector.adapter.MediaFileAdapter
@@ -118,11 +120,7 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
                     openCamera()
                 } else {
                     if (mOptions.isCrop && mOptions.maxChooseMedia == 1 && mOptions.isShowVideo && mMediaFileData[position].isVideo) run {
-                        Toast.makeText(
-                            this@MediaActivity,
-                            R.string.video_not_crop,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this@MediaActivity, R.string.video_not_crop, Toast.LENGTH_SHORT).show()
                     } else {
                         toPreviewActivity(position, mMediaFileData, mCheckMediaFileData)
                     }
@@ -141,14 +139,7 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
                         mMediaFileData[position].isCheck = true
                         mCheckMediaFileData.add(mMediaFileData[position])
                     } else {
-                        Toast.makeText(
-                            this@MediaActivity,
-                            getString(
-                                R.string.max_choose_media,
-                                mOptions.maxChooseMedia.toString()
-                            ),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this@MediaActivity, getString(R.string.max_choose_media, mOptions.maxChooseMedia.toString()), Toast.LENGTH_SHORT).show()
                     }
                 }
                 updateCheckedStatus()
@@ -239,34 +230,30 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
         if (mCheckMediaFileData.size > 0) {
             if (mOptions.isCompress && !mOptions.isShowVideo) {
                 val viewGroup = window.decorView as ViewGroup
-                val inflate =
-                    LayoutInflater.from(this@MediaActivity)
-                        .inflate(R.layout.item_loading_view, viewGroup, false)
-                compressImage(
-                    mCheckMediaFileData,
-                    object : ImageCompress.OnCompressImageListCallback {
-                        override fun onCompressError(errorMsg: String) {
-                            if (viewGroup.indexOfChild(inflate) != -1) {
-                                viewGroup.removeView(inflate)
-                            }
+                val inflate = LayoutInflater.from(this@MediaActivity).inflate(R.layout.item_loading_view, viewGroup, false)
+                compressImage(mCheckMediaFileData, object : ImageCompress.OnCompressImageListCallback {
+                    override fun onCompressError(errorMsg: String) {
+                        if (viewGroup.indexOfChild(inflate) != -1) {
+                            viewGroup.removeView(inflate)
                         }
+                    }
 
-                        override fun onCompressSuccess(fileList: List<File>) {
-                            mCheckMediaFileData.clear()
-                            for (file in fileList) {
-                                mCheckMediaFileData.add(MediaSelectorFile.selectThisFile(file))
-                            }
-                            resultMediaIntent()
-                            if (viewGroup.indexOfChild(inflate) != -1) {
-                                viewGroup.removeView(inflate)
-                            }
+                    override fun onCompressSuccess(fileList: List<File>) {
+                        mCheckMediaFileData.clear()
+                        for (file in fileList) {
+                            mCheckMediaFileData.add(MediaSelectorFile.selectThisFile(file))
                         }
-
-                        override fun onStartCompress() {
-                            viewGroup.addView(inflate)
+                        resultMediaIntent()
+                        if (viewGroup.indexOfChild(inflate) != -1) {
+                            viewGroup.removeView(inflate)
                         }
+                    }
 
-                    })
+                    override fun onStartCompress() {
+                        viewGroup.addView(inflate)
+                    }
+
+                })
             } else {
                 resultMediaIntent()
             }
@@ -278,10 +265,7 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
      */
     fun resultMediaIntent() {
         val intent = Intent()
-        intent.putParcelableArrayListExtra(
-            Const.KEY_REQUEST_MEDIA_DATA,
-            mCheckMediaFileData as ArrayList<out Parcelable>
-        )
+        intent.putParcelableArrayListExtra(Const.KEY_REQUEST_MEDIA_DATA, mCheckMediaFileData as ArrayList<out Parcelable>)
         setResult(Const.CODE_RESULT_MEDIA, intent)
         finish()
     }
@@ -289,10 +273,7 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
     /**
      * 压缩图片
      */
-    private fun compressImage(
-        mMediaFileData: List<MediaSelectorFile>,
-        callback: ImageCompress.OnCompressImageListCallback
-    ) {
+    private fun compressImage(mMediaFileData: List<MediaSelectorFile>, callback: ImageCompress.OnCompressImageListCallback) {
         val configData = ArrayList<ImageConfig>()
         for (i in mMediaFileData.indices) {
             configData.add(ImageConfig.getDefaultConfig(mMediaFileData[i].filePath!!))
@@ -342,23 +323,25 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
     /**
      * 跳转到预览页面
      */
-    fun toPreviewActivity(
-        position: Int,
-        data: MutableList<MediaSelectorFile>,
-        checkData: MutableList<MediaSelectorFile>
-    ) {
+    fun toPreviewActivity(position: Int, data: MutableList<MediaSelectorFile>, checkData: MutableList<MediaSelectorFile>) {
         val intent = Intent(this, PreviewActivity::class.java)
-        intent.putParcelableArrayListExtra(
-            Const.KEY_PREVIEW_DATA_MEDIA,
-            data as ArrayList<out Parcelable>
-        )
-        intent.putParcelableArrayListExtra(
-            Const.KEY_PREVIEW_CHECK_MEDIA,
-            checkData as ArrayList<out Parcelable>
-        )
+//        intent.putParcelableArrayListExtra(Const.KEY_PREVIEW_DATA_MEDIA, data as ArrayList<out Parcelable>)
+//        intent.putParcelableArrayListExtra(Const.KEY_PREVIEW_CHECK_MEDIA, checkData as ArrayList<out Parcelable>)
+        putObject(this, Const.KEY_PREVIEW_DATA_MEDIA, data as ArrayList<MediaSelectorFile>)
+        putObject(this, Const.KEY_PREVIEW_CHECK_MEDIA, checkData as ArrayList<MediaSelectorFile>)
         intent.putExtra(Const.KEY_OPEN_MEDIA, mOptions)
         intent.putExtra(Const.KEY_PREVIEW_POSITION, position)
         startActivity(intent)
+    }
+
+    /**
+     * 把图片数据缓存到本地
+     */
+    private fun putObject(context: Context, key: String, data: ArrayList<MediaSelectorFile>) {
+        val sharedPreferences = context.getSharedPreferences(Const.MEDIA_SELECTOR_FILE_NAME, Context.MODE_PRIVATE)
+        val gson = Gson()
+        var jsonString = gson.toJson(data)
+        sharedPreferences.edit().putString(key, jsonString).apply()
     }
 
     /**
